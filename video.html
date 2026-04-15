@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Twilight Saga · Eeuwige Verjaardag</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #0a070c;
+            font-family: 'Cinema', 'Georgia', 'Times New Roman', 'Baskerville', serif;
+            overflow-x: hidden;
+            color: #e9dfd4;
+        }
+
+        /* Twilight atmosfeer: donker bos, mist, maanlicht */
+        .twilight-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: radial-gradient(ellipse at 30% 40%, #1a2a2c 0%, #030205 100%);
+        }
+
+        /* mist lagen */
+        .mist-layer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            background: repeating-linear-gradient(transparent, rgba(70, 80, 100, 0.08) 2px, transparent 8px);
+            backdrop-filter: blur(2px);
+        }
+
+        .fog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><filter id="blur"><feGaussianBlur stdDeviation="25"/></filter><rect width="100%" height="100%" fill="transparent"/><ellipse cx="20%" cy="70%" rx="45%" ry="30%" fill="rgba(50,35,55,0.25)" filter="url(%23blur)"/><ellipse cx="85%" cy="30%" rx="50%" ry="35%" fill="rgba(25,35,50,0.2)" filter="url(%23blur)"/></svg>') repeat;
+            background-size: cover;
+            opacity: 0.5;
+            pointer-events: none;
+            z-index: -1;
+            animation: driftFog 22s infinite alternate ease-in-out;
+        }
+
+        @keyframes driftFog {
+            0% { transform: translateX(0px) scale(1); opacity: 0.4; }
+            100% { transform: translateX(3%) scale(1.02); opacity: 0.7; }
+        }
+
+        /* maan (volle, bleke vampier maan) */
+        .moon-twilight {
+            position: fixed;
+            top: 6%;
+            right: 5%;
+            width: 130px;
+            height: 130px;
+            background: radial-gradient(circle at 30% 35%, #f7f3e0, #cdc2a0);
+            border-radius: 50%;
+            box-shadow: 0 0 45px 12px rgba(210, 190, 140, 0.5);
+            z-index: 0;
+            opacity: 0.85;
+        }
+        .moon-twilight::after {
+            content: "";
+            position: absolute;
+            top: 18px;
+            right: 20px;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, #0a0c1a, #030205);
+            border-radius: 50%;
+            box-shadow: inset -3px -3px 10px rgba(0,0,0,0.6);
+        }
+
+        /* boom silhouetten (Forks bos) */
+        .tree-silhouettes {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 250px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 200"><path fill="%23120e16" d="M0,200 L0,130 Q70,110 130,140 Q190,170 250,120 Q310,70 380,110 Q450,150 520,100 Q580,50 660,90 Q740,130 820,80 Q880,40 960,100 Q1040,160 1120,120 Q1180,90 1200,110 L1200,200 Z"/><path fill="%2317131f" d="M0,200 L0,150 Q100,130 200,160 Q300,190 400,140 Q500,90 600,130 Q700,170 800,120 Q900,70 1000,130 Q1100,190 1200,150 L1200,200 Z"/></svg>') repeat-x bottom;
+            background-size: 600px;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.8;
+        }
+
+        /* hoofd container */
+        .container {
+            position: relative;
+            z-index: 15;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 4rem;
+        }
+
+        /* header: stijl zoals Twilight boek/film titel */
+        .twilight-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            letter-spacing: 4px;
+        }
+
+        .twilight-logo {
+            font-size: 3.5rem;
+            font-weight: 400;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, #bcc0c7, #7e6b5e, #ac9e8b);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 12px rgba(0,0,0,0.5);
+            letter-spacing: 5px;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .sub {
+            font-size: 1rem;
+            color: #c0b29b;
+            border-top: 1px solid #6e4f3a;
+            display: inline-block;
+            padding-top: 0.5rem;
+            margin-top: 0.2rem;
+            font-style: italic;
+        }
+
+        .birthday-badge {
+            background: rgba(30, 20, 28, 0.7);
+            backdrop-filter: blur(5px);
+            display: inline-block;
+            padding: 0.3rem 1.5rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            margin: 1rem 0;
+            border-left: 2px solid #b38867;
+            border-right: 2px solid #b38867;
+            color: #e6cfaa;
+        }
+
+        /* Fotogalerij - Twilight stijl (crimson accenten) */
+        .gallery-title {
+            font-size: 1.8rem;
+            text-align: center;
+            margin: 2rem 0 1.5rem;
+            font-weight: 300;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #cdb69b;
+            border-bottom: 1px solid #4c2e2a;
+            display: inline-block;
+            width: auto;
+            padding-bottom: 0.5rem;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0 3rem;
+        }
+
+        .twilight-card {
+            background: rgba(10, 8, 15, 0.55);
+            backdrop-filter: blur(10px);
+            border-radius: 28px;
+            overflow: hidden;
+            transition: all 0.35s ease;
+            border: 1px solid rgba(160, 110, 80, 0.4);
+            box-shadow: 0 20px 30px -12px rgba(0,0,0,0.5);
+            cursor: pointer;
+        }
+
+        .twilight-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(200, 130, 90, 0.7);
+            box-shadow: 0 25px 35px -12px #000000aa, 0 0 0 1px #a7745a30;
+        }
+
+        .card-img {
+            width: 100%;
+            height: 260px;
+            object-fit: cover;
+            transition: transform 0.5s;
+            display: block;
+        }
+
+        .twilight-card:hover .card-img {
+            transform: scale(1.02);
+        }
+
+        .card-caption {
+            padding: 1.2rem;
+            text-align: center;
+            font-family: 'Georgia', serif;
+            font-weight: 500;
+            background: linear-gradient(0deg, #0f0b13, transparent);
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            color: #eedbba;
+            border-top: 1px solid #755a46;
+        }
+
+        /* Modal (lichtbak voor foto's) */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.94);
+            backdrop-filter: blur(15px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            font-family: 'Cinema', 'Georgia', serif;
+        }
+
+        .modal-content {
+            max-width: 85vw;
+            max-height: 80vh;
+            border-radius: 24px;
+            border: 2px solid #ad7a58;
+            box-shadow: 0 0 40px rgba(150, 80, 50, 0.5);
+            object-fit: contain;
+        }
+
+        .modal-caption {
+            margin-top: 20px;
+            color: #f0dbc0;
+            font-size: 1.3rem;
+            background: rgba(0,0,0,0.6);
+            padding: 8px 24px;
+            border-radius: 50px;
+            letter-spacing: 1px;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 25px;
+            right: 35px;
+            font-size: 45px;
+            font-weight: bold;
+            color: #c9aa85;
+            cursor: pointer;
+            transition: 0.2s;
+            background: none;
+            border: none;
+            font-family: monospace;
+        }
+        .close-modal:hover {
+            color: #f3cfaa;
+            text-shadow: 0 0 6px #b56a3a;
+        }
+
+        /* speciale "verjaardagsboodschap" in Edward/Bella stijl */
+        .eternal-message {
+            background: rgba(25, 18, 24, 0.7);
+            backdrop-filter: blur(8px);
+            border-radius: 42px;
+            padding: 1.8rem;
+            margin: 2rem 0 1rem;
+            text-align: center;
+            border: 1px solid #956e53;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+        }
+
+        .eternal-message p {
+            font-size: 1.2rem;
+            font-style: italic;
+            line-height: 1.5;
+            color: #f2e0ca;
+        }
+
+        .signature {
+            margin-top: 0.8rem;
+            font-size: 0.9rem;
+            color: #cbad89;
+            letter-spacing: 2px;
+        }
+
+        /* koperen knop + gloed */
+        .vintage-btn {
+            background: #2c1e1c;
+            border: 1px solid #b88862;
+            padding: 10px 28px;
+            border-radius: 60px;
+            font-family: 'Georgia', serif;
+            font-weight: bold;
+            color: #eddbbc;
+            margin-top: 18px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+        
+        .href-button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .vintage-btn:hover {
+            background: #4e2f28;
+            border-color: #e3b389;
+            box-shadow: 0 0 12px #b87448;
+            color: white;
+        }
+
+        /* verjaardagsnaam aanpassen */
+        .name-edit {
+            display: inline-block;
+            border-bottom: 1px dashed #b88862;
+            cursor: pointer;
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0.3rem 0;
+            transition: 0.1s;
+            color: #ffe1b3;
+        }
+
+        .name-edit:hover {
+            text-shadow: 0 0 4px #d6a073;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.7rem;
+            margin-top: 3rem;
+            opacity: 0.6;
+            color: #9e8a72;
+        }
+
+        @media (max-width: 700px) {
+            .twilight-logo { font-size: 2rem; letter-spacing: 3px; }
+            .gallery-grid { gap: 1rem; }
+            .card-img { height: 200px; }
+            .modal-content { max-width: 95vw; max-height: 70vh; }
+        }
+    </style>
+</head>
+<body>
+<div class="twilight-bg"></div>
+<div class="mist-layer"></div>
+<div class="fog"></div>
+<div class="moon-twilight"></div>
+<div class="tree-silhouettes"></div>
+
+<div class="container">
+    <div class="twilight-header">
+        <div class="twilight-logo">TWILIGHT SAGA</div>
+        <div class="birthday-badge">✦ Happy bday tiny lil bb ✦</div>
+        <div>
+            <span class="name-edit" id="birthdayNameTrigger">🩸 Tiny bb's year collection 🩸</span>
+        </div>
+    </div>
+
+    <!-- Fotogalerij met Twilight iconische momenten -->
+    <div style="text-align: center;">
+        <div class="gallery-title">⚜️ FULL OF ETERNAL LOVE ⚜️</div>
+    </div>
+
+    <div style="display: flex; justify-content: center;">
+        <video style="" width="640" height="360" controls>
+            <source src="images/lol.mp4" type="video/mp4">
+            <source src="images/lol.mp4" type="video/webm">
+            <source src="images/lol.mp4" type="video/ogg">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    
+    <!-- Eeuwige verjaardagsboodschap (Twilight stijl) -->
+    <div class="eternal-message">
+        <p> Me and Hongdo were brainstorming some ideas and we came to the conclusion that it would be sick if we just give you the engagement ring from that bella from Twilight, so I told him to go steal it and bring it to me. As a reward I will give hime some money so he can go to the panda stripclup in AMS</p>
+        <div class="signature">— Yep —</div>
+        <div class="href-button">
+            <button class="vintage-btn"><a style="text-decoration: none; color: white" href="index.html">Go back </a></button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal voor foto's inzoomen -->
+<div id="imageModal" class="modal">
+    <span class="close-modal">&times;</span>
+    <img class="modal-content" id="modalImg" alt="Twilight moment">
+    <div id="modalCaption" class="modal-caption"></div>
+</div>
+
+<script>
+    // Twilight Galerij afbeeldingen (iconische scènes, vampier sfeer, bos, rode appel, etc.)
+    // Gebruik HD kwaliteit Unsplash / thematische foto's die passen bij Twilight (rood, donker, romantisch)
+    // Voor authenticiteit: afbeeldingen van bekende twilight elementen + sfeerbeelden die passen binnen de licentie.
+    // Omdat we geen externe copyright foto's willen forceren, gebruik ik prachtige thematische free-to-use afbeeldingen van Pexels/Unsplash
+    // die de sfeer oproepen: donker bos, rode appel, maan, vampier romantiek, koppel in mist, volle maan.
+    // Alle links zijn veilig en geschikt voor een verjaardagsthema.
+    
+    const galleryData = [
+        {
+            imgUrl: "https://images.pexels.com/photos/1153467/pexels-photo-1153467.jpeg?auto=compress&cs=tinysrgb&w=600",
+            title: "🌲 Het eeuwige woud van Forks"
+        },
+        {
+            imgUrl: "https://images.pexels.com/photos/45853/grey-wolf-howling-wolf-wild-animal-45853.jpeg?auto=compress&cs=tinysrgb&w=600",
+            title: "🐺 De roep van de wolf (Jacob Black)"
+        },
+        {
+            imgUrl: "https://images.pexels.com/photos/325521/pexels-photo-325521.jpeg?auto=compress&cs=tinysrgb&w=600",
+            title: "🍎 De verboden vrucht - Rode appel"
+        },
+        {
+            imgUrl: "https://images.pexels.com/photos/36744/agriculture-apple-apple-tree-arbre.jpg?auto=compress&cs=tinysrgb&w=600",
+            title: "🌹 Bloedrode liefde"
+        },
+        {
+            imgUrl: "https://images.pexels.com/photos/248797/pexels-photo-248797.jpeg?auto=compress&cs=tinysrgb&w=600",
+            title: "🌙 Volle maan boven de Cullens"
+        },
+        {
+            imgUrl: "https://images.pexels.com/photos/1183029/pexels-photo-1183029.jpeg?auto=compress&cs=tinysrgb&w=600",
+            title: "🥀 Edward & Bella - Eeuwige dans"
+        },
+        {
+            imgUrl: "https://images.pexels.com/photos/567756/pexels-photo-567756.jpeg?auto=compress&cs=tinysrgb&w=600",
+            title: "🩸 Vampierschaduw (gloed)"
+        },
+        {
+            imgUrl: "https://images.pexels.com/photos/39284/macbook-apple-imac-apple-macbook-39284.jpeg?auto=compress&cs=tinysrgb&w=600",
+            title: "⌛ De tijd stopt nooit - maar onze liefde wel"
+        }
+    ];
+
+    // Extra afbeelding: een romantisch silhouet in het bos + mist (vervang optioneel)
+    // We voegen nog 2 afbeeldingen toe om compleet te zijn, maar deze zijn prachtig en thematisch.
+    const extraImages = [
+        "https://images.pexels.com/photos/247599/pexels-photo-247599.jpeg?auto=compress&cs=tinysrgb&w=600",
+        "https://images.pexels.com/photos/1759142/pexels-photo-1759142.jpeg?auto=compress&cs=tinysrgb&w=600"
+    ];
+    
+    // complete gallery rebuild
+    function buildGallery() {
+        const galleryGrid = document.getElementById("twilightGallery");
+        galleryGrid.innerHTML = "";
+        // alle data items
+        const allItems = [...galleryData];
+        // voeg nog 2 toe als extra scènes
+        allItems.push({ imgUrl: extraImages[0], title: "🕯️ Bloedrode zonsopgang (Twilight)" });
+        allItems.push({ imgUrl: extraImages[1], title: "🌿 Onze belofte onder de ceders" });
+        
+        allItems.forEach((item, idx) => {
+            const card = document.createElement("div");
+            card.className = "twilight-card";
+            card.setAttribute("data-modal-img", item.imgUrl);
+            card.setAttribute("data-modal-title", item.title);
+            
+            const img = document.createElement("img");
+            img.src = item.imgUrl;
+            img.alt = item.title;
+            img.className = "card-img";
+            img.loading = "lazy";
+            // fallback als image niet laadt: standaard stijl
+            img.onerror = function() {
+                this.src = "https://images.pexels.com/photos/257360/pexels-photo-257360.jpeg?auto=compress&cs=tinysrgb&w=600";
+            };
+            
+            const captionDiv = document.createElement("div");
+            captionDiv.className = "card-caption";
+            captionDiv.innerText = item.title;
+            
+            card.appendChild(img);
+            card.appendChild(captionDiv);
+            
+            // modal open click
+            card.addEventListener("click", (e) => {
+                openModal(item.imgUrl, item.title);
+            });
+            galleryGrid.appendChild(card);
+        });
+    }
+    
+    // Modal functionaliteit
+    const modal = document.getElementById("imageModal");
+    const modalImg = document.getElementById("modalImg");
+    const modalCaption = document.getElementById("modalCaption");
+    const closeModalBtn = document.querySelector(".close-modal");
+    
+    function openModal(imgUrl, title) {
+        modal.style.display = "flex";
+        modalImg.src = imgUrl;
+        modalCaption.innerText = title;
+        document.body.style.overflow = "hidden";
+    }
+    
+    function closeModal() {
+        modal.style.display = "none";
+        document.body.style.overflow = "auto";
+    }
+    
+    closeModalBtn.addEventListener("click", closeModal);
+    modal.addEventListener("click", (e) => {
+        if (e.target === modal) closeModal();
+    });
+    
+    // Bloedmaan special effect (knop: bloederig fonkelend effect, vampierglitter)
+    function bloodMoonBlessing() {
+        // creëer dieprode + gouden vonken
+        for (let i = 0; i < 60; i++) {
+            const particle = document.createElement("div");
+            particle.style.position = "fixed";
+            particle.style.width = `${Math.random() * 8 + 2}px`;
+            particle.style.height = particle.style.width;
+            particle.style.background = `radial-gradient(circle, #e34d2b, #8a1c0c, #f9b043)`;
+            particle.style.borderRadius = "50%";
+            particle.style.pointerEvents = "none";
+            particle.style.zIndex = "2000";
+            particle.style.left = `${Math.random() * window.innerWidth}px`;
+            particle.style.top = `${Math.random() * window.innerHeight}px`;
+            particle.style.boxShadow = "0 0 12px #ff4d2e";
+            document.body.appendChild(particle);
+            
+            particle.animate([
+                { opacity: 1, transform: "scale(1)" },
+                { opacity: 0, transform: `scale(${Math.random() * 2 + 1.5}) translateY(${Math.random() * 80 - 40}px)` }
+            ], {
+                duration: 1200,
+                easing: "cubic-bezier(0.2, 0.9, 0.6, 1)",
+                fill: "forwards"
+            });
+            setTimeout(() => particle.remove(), 1300);
+        }
+        // ook een tijdelijke rode gloed op de pagina
+        const overlay = document.createElement("div");
+        overlay.style.position = "fixed";
+        overlay.style.top = 0;
+        overlay.style.left = 0;
+        overlay.style.width = "100%";
+        overlay.style.height = "100%";
+        overlay.style.backgroundColor = "rgba(120, 30, 20, 0.25)";
+        overlay.style.pointerEvents = "none";
+        overlay.style.zIndex = "999";
+        overlay.style.animation = "fadeOut 1s forwards";
+        document.body.appendChild(overlay);
+        setTimeout(() => overlay.remove(), 1000);
+        
+        // extra kleine twilight-muziek sfeer (geen audio maar visueel bericht)
+        const msg = document.createElement("div");
+        msg.innerText = "🌕 Hongdooooooooooooooooooooooooooooooooooooo🌕";
+        msg.style.position = "fixed";
+        msg.style.bottom = "20%";
+        msg.style.left = "50%";
+        msg.style.transform = "translateX(-50%)";
+        msg.style.backgroundColor = "#2a1210cc";
+        msg.style.backdropFilter = "blur(12px)";
+        msg.style.padding = "10px 28px";
+        msg.style.borderRadius = "60px";
+        msg.style.color = "#ffcd94";
+        msg.style.fontFamily = "Georgia";
+        msg.style.fontWeight = "bold";
+        msg.style.zIndex = "1001";
+        msg.style.border = "1px solid #c16a46";
+        msg.style.whiteSpace = "nowrap";
+        document.body.appendChild(msg);
+        let hondoImage = new Image(500, 500);
+        hondoImage.src = 'images/71137e1145b76448b03f0a3aeeb92149.jpg';
+        hondoImage.style.position = "absolute";
+        hondoImage.style.bottom = "-80%";
+        hondoImage.style.left = "50%";
+        hondoImage.style.transform = "translateX(-50%)";
+        hondoImage.style.zIndex = '9999';
+        document.body.appendChild(hondoImage);
+        setTimeout(() => msg.remove(), 2800);
+        setTimeout(() => hondoImage.remove(), 2800);
+    }
+    
+    // aanpasbare naam van jarige (zoals Bella, Edward of echte vriend)
+    function setupNameChange() {
+        const nameSpan = document.getElementById("birthdayNameTrigger");
+        const originalText = nameSpan.innerText;
+        nameSpan.addEventListener("click", () => {
+            let newName = prompt("✨ Typ de naam van de jarige (Twilight stijl) ✨", "Bella Swan");
+            if (newName && newName.trim() !== "") {
+                nameSpan.innerHTML = `🩸 ${newName} 🩸`;
+                // ook de boodschap in de eternial message personaliseren
+                const msgParagraph = document.querySelector(".eternal-message p");
+                if (msgParagraph) {
+                    let currentMsg = msgParagraph.innerHTML;
+                    // vervang de naam dynamisch zonder de hele layout te verpesten
+                    if (!currentMsg.includes("jarige die net zo betoverend is")) {
+                        // backup, voeg extra toe
+                    } else {
+                        // we willen de verjaardagsgroet aanpassen met naam
+                        msgParagraph.innerHTML = `“Jij bent mijn leven. Mijn enige wens is dat deze dag, net als de eeuwigheid, gevuld is met rode wijn, maanlicht en een onbreekbare band.<br> 
+                        Voor ${newName}, die net zo betoverend is als de schemering. Happy Birthday, mijn eeuwige vlam.”`;
+                    }
+                }
+                // kleine glitter voor de lol
+                bloodMoonBlessing(); // mini effect
+            } else if (newName === "") {
+                nameSpan.innerHTML = originalText;
+            }
+        });
+    }
+    
+    // Voeg extra sfeer: vallende bladeren / bloedrode bladeren
+    function addFallingLeaves() {
+        setInterval(() => {
+            if (Math.random() > 0.75) {
+                const leaf = document.createElement("div");
+                leaf.innerHTML = "🍂";
+                leaf.style.position = "fixed";
+                leaf.style.left = Math.random() * window.innerWidth + "px";
+                leaf.style.top = "-20px";
+                leaf.style.fontSize = Math.random() * 18 + 12 + "px";
+                leaf.style.opacity = 0.7;
+                leaf.style.pointerEvents = "none";
+                leaf.style.zIndex = "50";
+                leaf.style.filter = "drop-shadow(0 0 2px #ac4a2a)";
+                document.body.appendChild(leaf);
+                leaf.animate([
+                    { transform: "translateY(0px) rotate(0deg)", opacity: 0.8 },
+                    { transform: `translateY(${window.innerHeight + 50}px) rotate(360deg)`, opacity: 0 }
+                ], {
+                    duration: Math.random() * 4000 + 3000,
+                    easing: "linear",
+                    fill: "forwards"
+                });
+                setTimeout(() => leaf.remove(), 6000);
+            }
+        }, 3500);
+    }
+    
+    // initialiseer alles
+    function init() {
+        buildGallery();
+        setupNameChange();
+        const bloodBtn = document.getElementById("sparkBloodMoonBtn");
+        if (bloodBtn) bloodBtn.addEventListener("click", bloodMoonBlessing);
+        addFallingLeaves();
+        
+        // Voeg extra css animatie voor fadeout
+        const styleSheet = document.createElement("style");
+        styleSheet.textContent = `@keyframes fadeOut { 0% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }`;
+        document.head.appendChild(styleSheet);
+        
+        // open modale foto begeleiding: als je op galerij klikt werkt het.
+        console.log("Twilight fotoshow gereed — Eeuwige verjaardag!");
+    }
+    
+    init();
+</script>
+</body>
+</html>
